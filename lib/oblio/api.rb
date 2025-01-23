@@ -15,6 +15,11 @@ module Oblio
       uri.query = URI.encode_www_form(params)
       request = Net::HTTP::Get.new(uri)
       request['Authorization'] = "Bearer #{@api_key}"
+
+      # Logging for debugging
+      puts "Request URI: #{uri}"
+      puts "Request Headers: #{request.to_hash}"
+
       send_request(request)
     end
 
