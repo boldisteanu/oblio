@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'optparse'
+require_relative '../lib/oblio'
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: create_invoice [options]"
+
+  options[:api_key] = ENV['OBLIO_API_KEY']
+
+  opts.on("-f", "--file FILE", "Invoice Data File") do |v|
+    options[:file] = v
+  end
+end.parse!
+
+if options[:api_key].nil? || options[:file].nil?
+  puts "API key and invoice data file are required."
+  exit 1
+end
+
+# Load invoice data from file
+invoice_data = JSON.parse(File.read(options[:file]))
+
+# Create API and Invoice instances
+api = Oblio::Api.new(options[:api_key])
+invoice = Oblio::Invoice.new(invoice_data)
+
+# Create the invoice via the API
+begin
+  result = invoice.create(api)
+  puts "Invoice created successfully: #{result}"
+rescue => e
+  puts "Error: #{e.message}"
+end
