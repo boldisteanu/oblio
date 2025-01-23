@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'optparse'
+require 'json'
+require_relative '../lib/oblio'
+
+begin
+    companies = Oblio::Company.list()
+    puts "Companies: #{companies}"
+    # rescue => e
+    # puts "Error: #{e.message}"
+end
